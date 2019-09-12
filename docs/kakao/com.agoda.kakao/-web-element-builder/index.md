@@ -1,4 +1,4 @@
-[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [WebElementBuilder](.)
+[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [WebElementBuilder](./index.md)
 
 # WebElementBuilder
 
@@ -21,12 +21,6 @@ Class for building WebView element matchers
 | Name | Summary |
 |---|---|
 | [&lt;init&gt;](-init-.md) | `WebElementBuilder(web: WebInteraction<*>)`<br>Class for building WebView element matchers |
-
-### Properties
-
-| Name | Summary |
-|---|---|
-| [web](web.md) | `val web: WebInteraction<*>` |
 
 ### Functions
 

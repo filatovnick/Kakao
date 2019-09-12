@@ -1,25 +1,25 @@
 package com.agoda.sample
 
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.ActivityTestRule
+import com.agoda.kakao.screen.Screen.Companion.onScreen
 import com.agoda.sample.screen.TestRecyclerScreen
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class RecyclerTest {
     @Rule
     @JvmField
     val rule = ActivityTestRule(RecyclerActivity::class.java)
 
-    val screen = TestRecyclerScreen()
-
     @Test
     fun testContentItemsRecyclerView() {
-        screen {
+        onScreen<TestRecyclerScreen> {
             recycler {
                 isVisible()
+                hasSize(10)
 
                 firstChild<TestRecyclerScreen.Item> {
                     isVisible()

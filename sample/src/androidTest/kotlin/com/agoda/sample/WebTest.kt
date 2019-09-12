@@ -1,24 +1,23 @@
 package com.agoda.sample
 
-import android.support.test.espresso.web.webdriver.Locator
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.ActivityTestRule
+import com.agoda.kakao.screen.Screen.Companion.onScreen
 import com.agoda.sample.screen.TestWebScreen
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class WebTest {
     @Rule
     @JvmField
     val rule = ActivityTestRule(WebAcitivty::class.java)
 
-    private val screen = TestWebScreen()
-
     @Test
     fun testWebViewHasTextHelloAndClickLink() {
-        screen {
+        onScreen<TestWebScreen> {
             webView {
                 withElement(Locator.ID, "text") {
                     hasText("Hello")
@@ -28,5 +27,29 @@ class WebTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun testWebViewInteractionInterceptor() {
+        val list = mutableListOf<String>()
+
+        onScreen<TestWebScreen> {
+            webView {
+                intercept {
+                    onAll { list.add("ALL") }
+                    onCheck { _, _ -> list.add("CHECK") }
+                    onPerform { _, _ -> list.add("PERFORM") }
+                }
+
+                withElement(Locator.ID, "text") {
+                    hasText("Hello")
+                }
+                withElement(Locator.LINK_TEXT, "My Home") {
+                    click()
+                }
+            }
+        }
+
+        assert(list == mutableListOf("ALL", "CHECK", "ALL", "PERFORM"))
     }
 }

@@ -1,6 +1,7 @@
 # Kakao
+[![Github tag version](https://img.shields.io/github/tag/agoda-com/kakao.svg?label=version)](https://bintray.com/agoda/maven/kakao)
 [![CircleCI](https://circleci.com/gh/agoda-com/Kakao/tree/master.svg?style=shield&circle-token=0d0ed659625be4efe54fe706c16894cd54213690)](https://circleci.com/gh/agoda-com/Kakao/tree/master)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.1.51-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3.41-blue.svg)](http://kotlinlang.org/)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Kakao-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/6314)
 
 Nice and simple DSL for Espresso in Kotlin
@@ -24,7 +25,7 @@ This is an example just to check the visibility and you can see that it's not lo
 #### Create Screen
 Create your entity `Screen` where you will add the views involved in the interactions of the tests:
 ```Kotlin
-class FormScreen : Screen<FormScreen>(){}
+class FormScreen : Screen<FormScreen>()
 ```
  `Screen` can represent the whole user interface or a portion of UI.
 If you are using [Page Object pattern](https://martinfowler.com/bliki/PageObject.html) you can put the interactions of Kakao inside the Page Objects.
@@ -32,10 +33,10 @@ If you are using [Page Object pattern](https://martinfowler.com/bliki/PageObject
 #### Create KViews
 `Screen` contains `KViews`, these are the Android Framework views where you want to do the interactions:
 ```Kotlin
-class FormScreen : Screen<FormScreen>(){
-    val phone = KView { withId(R.id.phone)}
-    val email = KEditText { withId(R.id.email)}
-    val submit = KButton { withId(R.id.submit)}
+class FormScreen : Screen<FormScreen>() {
+    val phone = KView { withId(R.id.phone) }
+    val email = KEditText { withId(R.id.email) }
+    val submit = KButton { withId(R.id.submit) }
 }
 ```
 Kakao provides different types depending on the type of view:
@@ -47,6 +48,8 @@ Kakao provides different types depending on the type of view:
 * KWebView
 * KCheckbox
 * KViewPager
+* KSeekBar
+* <b>and more</b>
 
 
 Every KView contains matchers to retrieve the view involved in the ViewInteraction. Some examples of matchers provided
@@ -57,6 +60,7 @@ by Kakao:
 * withContentDescription
 * withDrawable
 * withBackgroundColor
+* <b>and more</b>
 
 Like in Espresso you can combine different matchers:
 ```Kotlin
@@ -80,8 +84,7 @@ val email = KEditText {
 The syntax of the test with Kakao is very easy, once you have the `Screen` and the `KViews` defined, you only have to apply 
 the actions or assertions like in Espresso: 
 ```Kotlin
-val screen = FormScreen()
-screen {
+onScreen<FormScreen> {
     phone {
        hasText("971201771")
     }
@@ -93,8 +96,7 @@ screen {
 Kakao provides multiple actions/assertions based on Espresso. Furthermore, you can combine them, just like the matchers. 
 You can use your custom assertions or your custom actions too:
 ```Kotlin
-val screen = FormScreen()
-screen {
+onScreen<FormScreen> {
     phone {
        assert { MyCustomAssertion.isThaiNumber() }
     }
@@ -115,13 +117,11 @@ Inside your `Screen` create the KView matching with your view:
 
 For `KListView`:
 ```Kotlin
-val list = KListView ({
-           builder = { withId(R.id.list) } })
+val list = KListView { builder = { withId(R.id.list) } }
 ```
 For `KRecyclerView`:
 ```Kotlin
-val myList = KRecyclerView ({
-             builder = { withId(R.id.recycler_view) } })
+val recycler = KRecyclerView { builder = { withId(R.id.recycler_view) } }
 ```
 
 You can combine different matchers to retrieve your view.
@@ -163,7 +163,7 @@ val recycler: KRecyclerView = KRecyclerView({
 
 And finally your final interaction will be:
 ```Kotlin
-screen {
+onScreen<RecyclerScreen> {
     recycler {
         firstChild<TestRecyclerScreen.Item> {
             isVisible()
@@ -178,8 +178,8 @@ Kakao provides different accessors in the adapter:
 * lastChild
 * childWith
 
-
 ##### Custom KViews
+
 If you have custom Views in your tests and you want to create your own `KView`, we have KBaseView. Just extend 
 this class and implement as much additional Action/Assertion interfaces as you want. 
 You also need to override constructors that you need.
@@ -191,14 +191,78 @@ class KMyView : KBaseView<KView>, MyActions, MyAssertions {
     constructor(parent: DataInteraction, function: ViewBuilder.() -> Unit) : super(parent, function)
 }
 ```
- 
+
+##### Intercepting
+
+If you need to add custom logic during the `Kakao -> Espresso` call chain (for example, logging) or
+if you need to completely change the `ViewAssertion` or `ViewAction` that are being sent to Espresso
+during runtime in some cases, you can use the intercepting mechanism.
+
+Interceptors are lambdas that you pass to a configuration DSL that will be invoked before `ViewInteraction`,
+`DataInteraction` or `Web.WebInteraction` classes' `perform` and `check` calls happening from inside Kakao.
+
+You have the ability to provide interceptors at 3 different levels: Kakao runtime, your 'Screen' classes
+and any individual `KView` instance.
+
+On each invocation of Espresso function that can be intercepted, Kakao will aggregate all available interceptors
+for this particular call and invoke them in descending order: `KView interceptor -> Active Screens interceptors ->
+Kakao interceptor`.
+
+Each of the interceptors in the chain can break the chain call by setting `isOverride` to true during configuration.
+In that case Kakao will not only stop invoking remaining interceptors in the chain, **but will not perform the Espresso
+call**. It means that in such case, the responsibility to actually invoke Espresso lies on the shoulders
+of the developer.
+
+Here's the examples of intercepting configurations:
+```Kotlin
+class SomeTest {
+    @Before
+    fun setup() {
+        Kakao { // Kakao runtime
+            intercept {
+                onViewInteraction { // Intercepting calls on ViewInteraction classes across whole runtime
+                    onPerform { interaction, action -> // Intercept perform() call
+                        Log.d("KAKAO", "$interaction is performing $action")
+                    }
+                }
+            }
+        }
+    }
+    
+    @Test
+    fun test() {
+        onScreen<MyScreen> {
+            intercept {
+                onViewInteraction { // Intercepting calls on ViewInteraction classes while in the context of MyScreen
+                    onCheck { interaction, assertion -> // Intercept check() call
+                        Log.d("KAKAO", "$interaction is checking $assertion")
+                    }
+                }
+            }
+            
+            myView {
+                intercept { // Intercepting ViewInteraction calls on this individual view
+                    onPerform(true) { interaction, action -> // Intercept perform() call and overriding the chain 
+                        // When performing actions on this view, Kakao level interceptor will not be called
+                        // and we have to manually call Espresso now.
+                        Log.d("KAKAO_VIEW", "$interaction is performing $action")
+                        interaction.perform(action)
+                    }
+                }
+            }
+        }
+    }
+}
+```
+For more detailed info please refer to the documentation.
+
 ### Setup
 Maven
 ```xml
 <dependency>
   <groupId>com.agoda.kakao</groupId>
   <artifactId>kakao</artifactId>
-  <version>1.0.1</version>
+  <version>2.1.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -207,14 +271,22 @@ or Gradle:
 repositories {
     jcenter()
 }
-dependencies {
-    // For Gradle Version below 3.0.0
-    androidTestCompile 'com.agoda.kakao:kakao:1.0.1'
 
-    // For Gradle Version 3.0.0 or above
-    androidTestImplementation 'com.agoda.kakao:kakao:1.0.1'
+dependencies {
+    androidTestImplementation 'com.agoda.kakao:kakao:2.1.0'
 }
 ```
+
+### AndroidX
+Default artifact starting from `2.0.0` includes AndroidX libraries to build upon. If you're still using
+old support libraries, please use `2.X.X-support` artifact.
+```
+dependencies {
+    androidTestImplementation 'com.agoda.kakao:kakao:2.1.0-support'
+}
+```
+**IMPORTANT:** We stop the development for the `-support` artifact and version `2.1.0-support` is the
+latest version available with usage of support libraries. Please consider migrating to AndroidX.
 
 ### Contribution Policy
 
@@ -232,9 +304,9 @@ Kakao is open source and available under the [Apache License, Version 2.0](https
 
 ### Thanks to
 
-* [Alviere](https://github.com/Alviere) - **Ilya Lim** 
-* [VerachadW](https://github.com/VerachadW) - **Verachad Wongsawangtham**
-* [Сdsap](https://github.com/cdsap) - **Inaki Villar** 
+* [Unlimity](https://github.com/Unlimity) - **Ilya Lim** 
 * [Vacxe](https://github.com/Vacxe) - **Konstantin Aksenov** 
+* [Сdsap](https://github.com/cdsap) - **Inaki Villar** 
+* [VerachadW](https://github.com/VerachadW) - **Verachad Wongsawangtham**
 * [JuDrummer](https://github.com/judrummer) - **Tipatai Puthanukunkit** 
 

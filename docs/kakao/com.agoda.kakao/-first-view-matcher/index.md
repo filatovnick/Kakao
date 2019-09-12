@@ -1,4 +1,4 @@
-[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [FirstViewMatcher](.)
+[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [FirstViewMatcher](./index.md)
 
 # FirstViewMatcher
 
@@ -11,12 +11,6 @@ Matches first view
 | Name | Summary |
 |---|---|
 | [&lt;init&gt;](-init-.md) | `FirstViewMatcher()`<br>Matches first view |
-
-### Properties
-
-| Name | Summary |
-|---|---|
-| [matched](matched.md) | `var matched: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 
 ### Functions
 

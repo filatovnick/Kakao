@@ -1,4 +1,4 @@
-[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [TextViewAssertions](.)
+[kakao](../../index.md) / [com.agoda.kakao](../index.md) / [TextViewAssertions](./index.md)
 
 # TextViewAssertions
 
@@ -22,6 +22,7 @@ Provides text based assertions for views
 | [hasEmptyText](has-empty-text.md) | `open fun hasEmptyText(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view have not any text |
 | [hasNoText](has-no-text.md) | `open fun hasNoText(text: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>`open fun hasNoText(resId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view does not have a given text |
 | [hasText](has-text.md) | `open fun hasText(text: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>`open fun hasText(resId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has given text`open fun hasText(matcher: Matcher<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has text that matches given matcher |
+| [hasTextColor](has-text-color.md) | `open fun hasTextColor(resId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has given text color |
 | [startsWithText](starts-with-text.md) | `open fun startsWithText(text: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view text start with given substring |
 
 ### Inherited Functions
@@ -29,8 +30,9 @@ Provides text based assertions for views
 | Name | Summary |
 |---|---|
 | [assert](../-base-assertions/assert.md) | `open fun assert(function: () -> ViewAssertion): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Check the view with the given custom assertion |
-| [doesNotExists](../-base-assertions/does-not-exists.md) | `open fun doesNotExists(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the matched view does not exists |
+| [doesNotExist](../-base-assertions/does-not-exist.md) | `open fun doesNotExist(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the matched view does not exist |
 | [hasAnyTag](../-base-assertions/has-any-tag.md) | `open fun hasAnyTag(vararg tags: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has at least one of the given tags |
+| [hasBackgroundColor](../-base-assertions/has-background-color.md) | `open fun hasBackgroundColor(resId: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>`open fun hasBackgroundColor(colorCode: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has given background color |
 | [hasDescendant](../-base-assertions/has-descendant.md) | `open fun hasDescendant(function: `[`ViewBuilder`](../-view-builder/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has given descendant |
 | [hasNotDescendant](../-base-assertions/has-not-descendant.md) | `open fun hasNotDescendant(function: `[`ViewBuilder`](../-view-builder/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has not given descendant |
 | [hasNotSibling](../-base-assertions/has-not-sibling.md) | `open fun hasNotSibling(function: `[`ViewBuilder`](../-view-builder/index.md)`.() -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Checks if the view has not given sibling |
@@ -61,7 +63,7 @@ Provides text based assertions for views
 
 | Name | Summary |
 |---|---|
-| [EditableAssertions](../-editable-assertions/index.md) | `interface EditableAssertions : TextViewAssertions`<br>Provides editable based assertions for views |
-| [KButton](../-k-button/index.md) | `class KButton : `[`KBaseView`](../-k-base-view/index.md)`<`[`KButton`](../-k-button/index.md)`>, TextViewAssertions`<br>View with BaseActions and TextViewAssertions |
-| [KCheckBox](../-k-check-box/index.md) | `class KCheckBox : `[`KBaseView`](../-k-base-view/index.md)`<`[`KCheckBox`](../-k-check-box/index.md)`>, `[`CheckableActions`](../-checkable-actions/index.md)`, TextViewAssertions, `[`CheckableAssertions`](../-checkable-assertions/index.md)<br>View with CheckableActions, CheckableAssertions and TextViewAssertions |
-| [KTextView](../-k-text-view/index.md) | `class KTextView : `[`KBaseView`](../-k-base-view/index.md)`<`[`KTextView`](../-k-text-view/index.md)`>, TextViewAssertions`<br>View with BaseActions and TextViewAssertions |
+| [EditableAssertions](../-editable-assertions/index.md) | `interface EditableAssertions : `[`TextViewAssertions`](./index.md)<br>Provides editable based assertions for views |
+| [KButton](../-k-button/index.md) | `class KButton : `[`KBaseView`](../-k-base-view/index.md)`<`[`KButton`](../-k-button/index.md)`>, `[`TextViewAssertions`](./index.md)<br>View with BaseActions and TextViewAssertions |
+| [KCheckBox](../-k-check-box/index.md) | `class KCheckBox : `[`KBaseView`](../-k-base-view/index.md)`<`[`KCheckBox`](../-k-check-box/index.md)`>, `[`CheckableActions`](../-checkable-actions/index.md)`, `[`TextViewAssertions`](./index.md)`, `[`CheckableAssertions`](../-checkable-assertions/index.md)<br>View with CheckableActions, CheckableAssertions and TextViewAssertions |
+| [KTextView](../-k-text-view/index.md) | `class KTextView : `[`KBaseView`](../-k-base-view/index.md)`<`[`KTextView`](../-k-text-view/index.md)`>, `[`TextViewActions`](../-text-view-actions/index.md)`, `[`TextViewAssertions`](./index.md)<br>View with BaseActions and TextViewAssertions |
